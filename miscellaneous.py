@@ -28,6 +28,10 @@
 # def munge(sep: AnyStr = None): ...
 # def munge(input: AnyStr, sep: AnyStr = None, limit=1000): ... 
 # 
+#
+# CHANGE ALL TABS INTO "4 WHITESPACES" IN A SOURCE FILE
+# Use Ctrl+H to replace "Alt+(Numpad 0, Numpad 9)" (this is ASCII for tab) with "    ".
+# 
 # METHOD ORDER IN A CLASS
 # From top to bottom: __init__, __special__, Properties, Public, Private.
 #

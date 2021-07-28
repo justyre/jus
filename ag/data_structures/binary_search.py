@@ -3,7 +3,7 @@
 from tests import jovian
 
 ##########################################
-### test cases
+### Test cases
 
 tests = []
 
@@ -213,14 +213,14 @@ tests_for_locate_in_rotated_list.append({
 })
 
 ###########################################
-### methods
-# input: cards(1 list, already sorted in desc order), query(1 num)
-# output: position of query in cards
+### Methods
+# Input: cards(1 list, already sorted in desc order), query(1 num)
+# Output: position of query in cards
 
-# method 1: linear search for `query` in a desc sorted list `cards`
-# time complexity: O(N)
-# space complexity: O(1)
 def locate_card_linear(cards, query):
+    """Linear search for `query` in a desc sorted list `cards`."""
+    # time complexity: O(N)
+    # space complexity: O(1)
     position = 0
     while position < len(cards):
                 
@@ -258,13 +258,13 @@ def binary_search(lo, hi, condition):
     return -1   
     
 def locate_card_binary(cards, query):
-    
-    # helper inner func: 
-    # decides where to look for `query` in `cards` given position `mid`
-    # time complexity: O(1)
-    # note: this is an inner func, so it can access the variables within
-    # the outer func (eg. cards, query)
+    """Binary search for `query` in a desc sorted list `cards`."""
     def condition(mid):
+        # helper inner func: 
+        # decides where to look for `query` in `cards` given position `mid`
+        # time complexity: O(1)
+        # note: this is an inner func, so it can access the variables within
+        # the outer func (eg. cards, query)
         if cards[mid] == query:
             # even if we've found the matching value, it may not be leftmost!
             if mid > 0 and cards[mid - 1] == query:
@@ -281,11 +281,10 @@ def locate_card_binary(cards, query):
     # do the binary search
     return binary_search(0, len(cards) - 1, condition)
 
-
-# find the first position of `query` in `cards` which is already sorted 
-# in ascending order. similar to locate_card_binary().
-# If nothing is found, returns -1
 def first_position(cards, query):
+    """Find the first position of `query` in `cards` which is already asc sorted."""
+    # Similar to locate_card_binary().
+    # If nothing is found, returns -1
     def condition(mid):
         if cards[mid] == query:
             if mid > 0 and cards[mid - 1] == query:
@@ -299,8 +298,8 @@ def first_position(cards, query):
     # do the binary search
     return binary_search(0, len(cards) - 1, condition)
 
-# find the last position of query in cards which is already asc sorted
 def last_position(cards, query):
+    """Find the last position of `query` in `cards` which is already asc sorted."""
     def condition(mid):
         if cards[mid] == query:
             if mid < len(cards) - 1 and cards[mid + 1] == query:
@@ -314,22 +313,21 @@ def last_position(cards, query):
     # do the binary search
     return binary_search(0, len(cards) - 1, condition)
 
-# find both the first & last position of query in cards
 def first_and_last_position(cards, query):
+    """Find both the first & last position of `query` in `cards`."""
     return first_position(cards, query), last_position(cards, query)
 
-
-# rotate an asc sorted list `rotations` times to get the list `nums`.
-# rotating a list is defined as removing the last elem of the list & 
-# adding it before the 1st elem, eg [3,2,4,1] -> [1,3,2,4].
-# 
-# since the orig list is sorted asc, after k rotations, the orig [0]
-# (smallest) is now at [k], and it's the only elem who has a bigger 
-# predecessor. thus, we simply need to check for each elem whether it <
-# its predecessor (if there is one), and the answer is simply k. if
-# no such elem exists, k must be 0 (not rotated at all).
-# time complexity: O(N)
 def count_rotations_linear(nums):
+    """Rotate an asc sorted list `rotations` times to get the list `nums`."""
+    # Rotating a list is defined as removing the last elem of the list & 
+    # adding it before the 1st elem, eg [3,2,4,1] -> [1,3,2,4].
+    # 
+    # since the orig list is sorted asc, after k rotations, the orig [0]
+    # (smallest) is now at [k], and it's the only elem who has a bigger 
+    # predecessor. thus, we simply need to check for each elem whether it <
+    # its predecessor (if there is one), and the answer is simply k. if
+    # no such elem exists, k must be 0 (not rotated at all).
+    # time complexity: O(N)
     position = 1
     while position < len(nums):
         if position > 0 and nums[position - 1] > nums[position]:
@@ -340,17 +338,17 @@ def count_rotations_linear(nums):
     # if nothing is returned, then the whole `nums` is asc or empty, 
     # ie not rotated at all, so return 0
     return 0
-            
-# binary search approach to the previous func:
-# if the mid elem < its predecessor, ans = mid; otherwise,
-# if the mid elem < last elem of the substring, ans is left of mid,
-# coz [ans] < [ans+1] < .. < [last] < [0] < [1] < .. < [ans-1],
-# and it's obvious that mid is in [ans, last-1], ie ans < mid;
-# similarly, if [mid] > [last], mid must be in [0,ans-1], ie ans>mid.
-# time complexity: O(log N)
+
 def count_rotations_binary(nums):
+    """Binary search approach to `count_rotations_linear()`."""
+    # if the mid elem < its predecessor, ans = mid; otherwise,
+    # if the mid elem < last elem of the substring, ans is left of mid,
+    # coz [ans] < [ans+1] < .. < [last] < [0] < [1] < .. < [ans-1],
+    # and it's obvious that mid is in [ans, last-1], ie ans < mid;
+    # similarly, if [mid] > [last], mid must be in [0,ans-1], ie ans>mid.
+    # time complexity: O(log N)
     lo, hi = 0, len(nums) - 1
-    # note: when nums is empty, hi = -1 < lo = 0, does not go into while-loop
+    # Note: when nums is empty, hi = -1 < lo = 0, does not go into while-loop
     while lo <= hi:
         mid = (lo + hi) // 2  # int division
         if mid > 0 and nums[mid] < nums[mid - 1]:
@@ -363,8 +361,8 @@ def count_rotations_binary(nums):
     # if nothing is returned, nums is asc or empty, needs 0 rotation
     return 0
 
-# same result as previous func, but using binary_search()
 def count_rotations_using_binary_search(nums):
+    """Rotate an asc sorted list `rotations` times to get the list `nums`, using `binary_search()`."""
     def condition(mid):
         if mid > 0 and nums[mid] < nums[mid - 1]:
             return 'found'
@@ -376,15 +374,15 @@ def count_rotations_using_binary_search(nums):
     # do the binary search, but for cases that return -1, adjust to 0
     return max(0, binary_search(0, len(nums) - 1, condition))
 
-
-# search for `target`'s first position in a rotated list `nums`.
-# nums is not sorted, so we'll have to find the position of [0]
-# in the orig list in `nums`. Then we'll turn `nums` 
-# back to the orig list `nums_asc`, and we'll find target's position
-# in nums_asc, say [k], by binary or linear search. Now target is at position
-# `k+ans` % len(nums) (ie if k+ans > len(nums), subtract len(nums)).
-# time complexity: O(log N)
 def locate_in_rotated_list_binary(nums, target):
+    """Search for `target`'s first position in a rotated list `nums`."""
+    # nums is not sorted, so we'll have to find the position of [0]
+    # in the orig list in `nums`. Then we'll turn `nums` 
+    # back to the orig list `nums_asc`, and we'll find target's position
+    # in nums_asc, say [k], by binary or linear search. Now target is at position
+    # `k+ans` % len(nums) (ie if k+ans > len(nums), subtract len(nums)).
+    # time complexity: O(log N)
+
     # find the position of [0] in the orig asc list in `nums`
     smallest = count_rotations_binary(nums)
     # turn `nums` back to the orig asc list `nums_asc`.
@@ -402,7 +400,7 @@ def locate_in_rotated_list_binary(nums, target):
         
 
 ##################################
-### test client
+### Test client
 
 jovian.evaluate_test_cases_justyre(locate_card_binary, tests)
 

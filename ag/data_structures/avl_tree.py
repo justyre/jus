@@ -1,3 +1,5 @@
+"""Implementation of AVL tree, a kind of self-balancing BST tree."""
+
 #############################
 # Self-balancing binary tree that remains balanced after each insertion/ 
 # deletion. We discuss the AVL trees here, where self-balancing is achieved 
@@ -93,21 +95,21 @@
 ############################
 # PYTHON IMPLEMENTATION
 
-# generic tree node class
 class TreeNode:
+    """Tree node."""
+    
     def __init__(self, val) -> None:
         self.val = val
         self.left = None
         self.right = None
         self.height = 1
         
-# AVL tree class which supports the insert & delete operation
 class AVLTree:
-    
-    # recursively insert a node w/given `key` into tree rooted w/`root` & 
-    # returns new `root` of the modified tree. (`root` is of class TreeNode)
+    """AVL tree class which supports the insert & delete operation."""
+
     def insert(self, root, key):
-        
+        """Recursively insert a node with given `key` into tree rooted with `root`."""
+        # returns new `root` of the modified tree. (`root` is of class TreeNode)
         # step 1: perform standard BST insertion
         if not root:
             return TreeNode(key)
@@ -141,10 +143,9 @@ class AVLTree:
 
         return root
     
-    # recursively delete a node w/given `key` from tree rooted w/`root` & 
-    # returns new `root` of the modified tree.
     def delete(self, root, key):
-        
+        """Recursively delete a node with given `key` into tree rooted with `root`."""
+        # returns new `root` of the modified tree.
         # step 1: perform standard BST deletion
         # if root is None, return None
         if not root:
@@ -203,29 +204,28 @@ class AVLTree:
 
         return root        
         
-    # the height of node `root`, considering the `root is None` case
     def height(self, root):
+        """Return the height of node `root`, considering the `root is None` case."""
         return root.height if root else 0
     
-    # get the balance factor of root
     def balance_factor(self, root):
+        """Get the balance factor of `root`."""
         return self.height(root.left) - self.height(root.right) if root else 0
-    
-    # get the min value node of the subtree rooted w/`root`,  
-    # returning the leftmost leaf or (when root is None) None.
-    # Since the result is the leftmost grandchild, it 
-    # must be the minimum of all keys in subtree `root` (remember that 
-    # `root` is a BST).
+      
     def min_value_node(self, root):
+        """Get the min value node of the subtree rooted with `root`."""
+        # returning the leftmost leaf or (when root is None) None.
+        # Since the result is the leftmost grandchild, it 
+        # must be the minimum of all keys in subtree `root` (remember that 
+        # `root` is a BST).
         if root is None or root.left is None:
             return root
         return self.min_value_node(root.left)
     
-    # left rotate. eg:
-    #    t1, z, (t2,y,(t3,x,t4)) --> (t1,z,t2), y, (t3,x,t4)
-    #    This takes one step: LeftRotate(z).
     def left_rotate(self, z):
-        
+        """Left rotation."""
+        #    t1, z, (t2,y,(t3,x,t4)) --> (t1,z,t2), y, (t3,x,t4)
+        #    This takes one step: LeftRotate(z).
         y = z.right
         t2 = y.left
         
@@ -240,10 +240,10 @@ class AVLTree:
         # return the new root
         return y
     
-    # right rotate. eg:
-    #    ((t1,x,t2),y,t3), z, t4 --> (t1,x,t2), y, (t3,z,t4)
-    #    This takes one step: RightRotate(z).
     def right_rotate(self, z):
+        """Right rotation."""
+        #    ((t1,x,t2),y,t3), z, t4 --> (t1,x,t2), y, (t3,z,t4)
+        #    This takes one step: RightRotate(z).
         y = z.left
         t3 = y.right
         
@@ -258,17 +258,16 @@ class AVLTree:
         # return the new root
         return y
     
-    # preorder traversal: (key, left, right)
     def preorder_traversal(self, root):
+        """Preorder traversal: (key, left, right)."""
         if not root:
             return
         print("{0} ".format(root.val), end="")
         self.preorder_traversal(root.left)
         self.preorder_traversal(root.right)
-    
-    # display the tree
+
     def display_keys(self, root, space='\t', level=0):
-        """Displays the keys of a TreeNode obj in a horizontal hierarchy."""
+        """Display the keys of a `TreeNode` object in a horizontal hierarchy."""
         # debugcode next line
         # print(root.val if root else None, level)
         # if the node is empty, print the empty set symbol
@@ -287,7 +286,8 @@ class AVLTree:
         self.display_keys(root.left, space, level + 1)
 
 
-# driver program to test above funcs
+######################
+# Driver code
 
 myTree = AVLTree()
 root = None
@@ -309,5 +309,3 @@ print("Preorder traversal after deletion is:")
 myTree.preorder_traversal(root)
 print("\nAfter deletion: ")
 myTree.display_keys(root)
-
-        

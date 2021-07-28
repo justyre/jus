@@ -1,4 +1,6 @@
-# linked list
+# Licensed under MIT License.
+# See LICENSE in the project root for license information.
+
 """Linked list implementation."""
 
 from typing import Any
@@ -80,7 +82,8 @@ print("get element #2 (1st being #0): ", list2[2])
 print("get element #11 (non-existent): ", list2[11])
 
 
-# reverse a linked list
+# Reverse a linked list
+#
 # Check an example. To reverse (2,3,5) to (5,3,2), ie to change 
 # `None.next = 2 = old list head, 2.next = 3, 3.next = 5, 5.next = None` to
 # `None.next = 5 = new list head, 5.next = 3, 3.next = 2, 2.next = None`, 

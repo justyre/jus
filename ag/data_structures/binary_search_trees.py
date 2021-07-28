@@ -1,4 +1,4 @@
-# create a data structure which can store ~100M records &
+# Create a data structure which can store ~100M records &
 # perform insertion, search, update and list operations efficiently 
 # using balanced binary search tree (aka balanced BST)
 
@@ -29,6 +29,7 @@ class User:
 
 class UserDatabase:
     """Linear data structure (ie brute force)."""
+    
     # self.users is an asc sorted list initialized as an empty one
     def __init__(self) -> None:
         self.users = []
@@ -62,29 +63,6 @@ class UserDatabase:
     def list_all(self):
         """Return the list of user objs. O(1)."""
         return self.users
-    
-
-aakash = User('aakash', 'Aakash Rai', 'aakash@example.com')
-biraj = User('biraj', 'Biraj Das', 'biraj@example.com')
-hemanth = User('hemanth', 'Hemanth Jain', 'hemanth@example.com')
-jadhesh = User('jadhesh', 'Jadhesh Verma', 'jadhesh@example.com')
-siddhant = User('siddhant', 'Siddhant Sinha', 'siddhant@example.com')
-sonaksh = User('sonaksh', 'Sonaksh Kumar', 'sonaksh@example.com')
-vishal = User('vishal', 'Vishal Goel', 'vishal@example.com')
-
-users = [aakash, biraj, hemanth, jadhesh, siddhant, sonaksh, vishal]
-
-db = UserDatabase()
-db.insert(hemanth)
-db.insert(aakash)
-db.insert(vishal)
-print(db.users)
-db.update(User(username='aakash', name='Aakash U', email='aakashu@example.com'))
-user = db.find('aakash')
-print(user)
-db.insert(siddhant)
-print(db.list_all())
-
 
 class TreeNode:
     """A node within a binary tree, w/many methods encapsulated."""
@@ -106,7 +84,7 @@ class TreeNode:
         return 1 + max(TreeNode.height(self.left), TreeNode.height(self.right))
 
     def size(self):
-        """Compute total # (non-None) nodes in a binary tree."""
+        """Compute total # (non-None) nodes in a binary tree (including the root)."""
         if self is None:
             return 0
         return 1 + TreeNode.size(self.left) + TreeNode.size(self.right)
@@ -118,7 +96,7 @@ class TreeNode:
         return TreeNode.traverse_in_order(self.left) + [self.key] + TreeNode.traverse_in_order(self.right)
     
     def traverse_pre_order(self):
-        """Preorder traversal. (DLR)"""
+        """Preorder traversal (DLR)."""
         # traverse the current node, then the left subtree recursively preorder 
         # (ie from root to leaf), then the right subtree recursively preorder.
         if self is None:
@@ -126,7 +104,7 @@ class TreeNode:
         return [self.key] + TreeNode.traverse_pre_order(self.left) + TreeNode.traverse_pre_order(self.right)
 
     def traverse_post_order(self):
-        """Postorder traversal. (LRD)"""
+        """Postorder traversal (LRD)."""
         if self is None:
             return []
         return TreeNode.traverse_post_order(self.left) + TreeNode.traverse_post_order(self.right) + [self.key]
@@ -150,8 +128,8 @@ class TreeNode:
         print(space * level + str(self.key))
         TreeNode.display_keys(self.left, space, level + 1)
 
-    # inverse of parse_tuple(): converts a binary tree into a tuple
     def to_tuple(self):
+        """Convert a binary tree into a tuple. Inverse of `parse_tuple()`."""
         # if the node is empty
         if self is None:
             return None
@@ -163,22 +141,22 @@ class TreeNode:
         right_subtree = TreeNode.to_tuple(self.right)
         return (left_subtree, self.key, right_subtree)
 
-    # overload the default representation func (returning an official str repr)
     def __repr__(self) -> str:
+        """Overload the default representation func (returning an official str repr)."""
         return "BinaryTree <{}>".format(self.to_tuple())
     
-    # returns a human-readable format
     def __str__(self) -> str:
+        """Return a human-readable format."""
         return self.__repr__()
 
-    # parses a tuple (left_subtree, key, right_subtree) into a binary tree
-    # note: here we use the @staticmethod decorator, which means: this method 
-    # cannot have self or cls as parameter; it cannot access the class 
-    # attributes or methods, or the instance attributes or methods.
-    # You can call a static method directly like TreeNode.parse_tuple(data), 
-    # w/out making an instance first. (For non-static methods, this will err)
     @staticmethod
     def parse_tuple(data):
+        """Parse a tuple (left_subtree, key, right_subtree) into a binary tree."""
+        # Note: Here we use the @staticmethod decorator, which means: this method 
+        # cannot have self or cls as parameter; it cannot access the class 
+        # attributes or methods, or the instance attributes or methods.
+        # You can call a static method directly like TreeNode.parse_tuple(data), 
+        # w/out making an instance first. (For non-static methods, this will err)
         if data is None:
             node = None
         elif isinstance(data, tuple) and len(data) == 3:
@@ -192,30 +170,18 @@ class TreeNode:
             node = TreeNode(data)
         return node
 
-
-tree2 = TreeNode.parse_tuple(((1, 2, None), 3, ((None, 4, 5), 6, (7, 8, 9))))
-print(tree2)
-print(type(tree2), tree2.height(), tree2.size())
-print(tree2.traverse_in_order())
-print(tree2.traverse_pre_order())
-print(tree2.traverse_post_order())
-# should show tree2 in tree form that is rotated 90 degrees counterclockwise 
-TreeNode.display_keys(tree2)
-# should show tree2 in tuple form
-print(TreeNode.to_tuple(tree2))
-
-
-# get a list w/out Nones. Input `nums` can be list or tuple
 def remove_none(nums):
+    """Get a list without Nones. Input `nums` can be list or tuple."""
     return [x for x in nums if x is not None]
 
-# checks if a node is a binary search tree: a binary tree that satisfies:
-# the left subtree of any node only contains nodes w/keys < this node's key, & 
-# the right subtree .. > ..
-# From this, we can see that if a parent node is a BST, then both its left & 
-# right subtrees must be BSTs too.
-# returns a tuple of (True/False, min of keys in node, max of keys in node)
 def is_bst(node):
+    """Check if a node is a binary search tree."""
+    # A binary tree satisfies:
+    # the left subtree of any node only contains nodes w/keys < this node's key, & 
+    # the right subtree .. > ..
+    # From this, we can see that if a parent node is a BST, then both its left & 
+    # right subtrees must be BSTs too.
+    # returns a tuple of (True/False, min of keys in node, max of keys in node)
     if node is None:
         return True, None, None
     
@@ -230,10 +196,10 @@ def is_bst(node):
     
     return is_bst_node, min_key, max_key
 
-print(is_bst(tree2))
 
-# a node of a binary search tree
 class BSTNode:
+    """A node of a binary search tree."""
+    
     def __init__(self, key, value=None) -> None:
         self.key = key
         self.value = value
@@ -241,13 +207,9 @@ class BSTNode:
         self.right = None
         self.parent = None
 
-tree = BSTNode(jadhesh.username, jadhesh)
-print(tree.key, tree.value)
-
-
-# insert a new node(key, value) into a BST `none`
-# Time complexity: O(log N) + O(N) = O(N) (coz worst case height of tree = N)
 def insert(node, key, value):
+    """Insert a new node(key, value) into a BST."""
+    # Time complexity: O(log N) + O(N) = O(N) (coz worst case height of tree = N)
     if node is None:
         node = BSTNode(key, value)
     elif key < node.key:
@@ -259,10 +221,10 @@ def insert(node, key, value):
         node.right.parent = node
         
     return node
-
-# find a node w/a given key within a BST. 
-# For a balanced BST, this func only takes O(log N); otherwise it's O(N)
+ 
 def find(node, key):
+    """Find a node with a given key within a BST."""
+    # For a balanced BST, this func only takes O(log N); otherwise it's O(N)
     if node is None:
         return None
     if key == node.key:
@@ -272,25 +234,25 @@ def find(node, key):
     if key > node.key:
         return find(node.right, key)
 
-# update a node w/a given key w/`value` within a BST.
-# For a balanced BST, this func only takes O(log N); otherwise it's O(N)
 def update(node, key, value):
+    """Update a node with a given key with `value` within a BST."""
+    # For a balanced BST, this func only takes O(log N); otherwise it's O(N)
     target = find(node, key)
     if target is not None:
         target.value = value
 
-# retrieve all the key-value pairs in a BST in asc sorted order of keys.
-# To achieve asc sortedness, we can perform an inorder traversal of the BST, 
-# and then we know from the definition of BST (cf is_bst()) that it's asc. O(N)
 def list_all(node):
+    """Retrieve all the key-value pairs in a BST in asc sorted order of keys."""
+    # To achieve asc sortedness, we can perform an inorder traversal of the BST, 
+    # and then we know from the definition of BST (cf is_bst()) that it's asc. O(N)
     if node is None:
         return []
     return list_all(node.left) + [(node.key, node.value)] + list_all(node.right)    
 
-# check if a BST is balanced; returns (True/False, height of tree).
-# First we ensure the left subtree is balanced; then ensure the right subtree 
-# is balanced too; and ensure the diff betw heights of left & right subtree <=1
 def is_balanced(node):
+    """Check if a BST is balanced; returns (True/False, height of tree)."""
+    # First we ensure the left subtree is balanced; then ensure the right subtree 
+    # is balanced too; and ensure the diff betw heights of left & right subtree <=1
     if node is None:
         return True, 0
     balanced_l, height_l = is_balanced(node.left)
@@ -299,11 +261,12 @@ def is_balanced(node):
     height = 1 + max(height_l, height_r)
     return balanced, height
 
-# create a balanced BST from an asc sorted list/array of key-value pairs.
-# To do this, first we find the midpoint of the list, and make it the root;
-# then we balance the left sublist; then the right sublist.
 def create_balanced_bst(data, lo=0, hi=None, parent=None):
-    # set the default of `hi` to the last index of elems in `data`.
+    """Create a balanced BST from an asc sorted list/array of key-value pairs."""
+    # To do this, first we find the midpoint of the list, and make it the root;
+    # then we balance the left sublist; then the right sublist.
+    
+    # Set the default of `hi` to the last index of elems in `data`.
     # Letting `hi` to be a parameter gives user customization power
     if hi is None:
         hi = len(data) - 1
@@ -321,12 +284,95 @@ def create_balanced_bst(data, lo=0, hi=None, parent=None):
     root.left = create_balanced_bst(data, lo, mid - 1, root)
     root.right = create_balanced_bst(data, mid + 1, hi, root)
     return root
-            
-# balances an unbalanced BST, by first performing an inorder traversal of it, 
-# so we have an asc sorted list now, where we then create_balance_bst() from
+ 
 def balance_bst(node):
+    """Balance an unbalanced BST."""
+    # By first performing an inorder traversal of it, 
+    # so we have an asc sorted list now, where we then create_balance_bst() from
     return create_balanced_bst(list_all(node))
 
+
+###############################
+
+class TreeMap:
+    """A generic class for BST that has been stated in a python-friendly manner."""
+    
+    def __init__(self) -> None:
+        # self.root is the BSTNode we are working on
+        self.root = None
+    
+    def __setitem__(self, key, value):
+        """With this, we can set a node by `treemap['key']`.
+        
+        If it doesn't exist, we insert it; if it already exists, we update it.
+        """
+        node = find(self.root, key)
+        # below is the same as `if node is None`, coz `not None == True`
+        if not node:
+            self.root = insert(self.root, key, value)
+            self.root = balance_bst(self.root)
+        else:
+            update(self.root, key, value)
+    
+    def __getitem__(self, key):
+        """With this, we can get a node by `treemap['key']`."""
+        node = find(self.root, key)
+        return node.value if node else None
+    
+    def __iter__(self):
+        """With this, we can iterate by `for key, value in treemap:` (in asc order)."""
+        return (x for x in list_all(self.root))
+    
+    def __len__(self):
+        """With this, we can get the length of a node by `len(treemap)`."""
+        return TreeNode.size(self.root)
+    
+    def display(self):
+        """Display the tree nicely."""
+        return TreeNode.display_keys(self.root)
+    
+
+#########################
+# Driver code
+
+# User and UserDatabase
+
+aakash = User('aakash', 'Aakash Rai', 'aakash@example.com')
+biraj = User('biraj', 'Biraj Das', 'biraj@example.com')
+hemanth = User('hemanth', 'Hemanth Jain', 'hemanth@example.com')
+jadhesh = User('jadhesh', 'Jadhesh Verma', 'jadhesh@example.com')
+siddhant = User('siddhant', 'Siddhant Sinha', 'siddhant@example.com')
+sonaksh = User('sonaksh', 'Sonaksh Kumar', 'sonaksh@example.com')
+vishal = User('vishal', 'Vishal Goel', 'vishal@example.com')
+
+users = [aakash, biraj, hemanth, jadhesh, siddhant, sonaksh, vishal]
+
+db = UserDatabase()
+db.insert(hemanth)
+db.insert(aakash)
+db.insert(vishal)
+print(db.users)
+db.update(User(username='aakash', name='Aakash U', email='aakashu@example.com'))
+user = db.find('aakash')
+print(user)
+db.insert(siddhant)
+print(db.list_all())
+
+
+# TreeNode
+
+tree2 = TreeNode.parse_tuple(((1, 2, None), 3, ((None, 4, 5), 6, (7, 8, 9))))
+print(tree2)
+print(type(tree2), tree2.height(), tree2.size())
+print(tree2.traverse_in_order())
+print(tree2.traverse_pre_order())
+print(tree2.traverse_post_order())
+# should show tree2 in tree form that is rotated 90 degrees counterclockwise 
+TreeNode.display_keys(tree2)
+# should show tree2 in tuple form
+print(TreeNode.to_tuple(tree2))
+
+print(is_bst(tree2))
     
 tree2 = insert(None, aakash.username, aakash)
 insert(tree2, biraj.username, biraj)
@@ -360,42 +406,14 @@ tree2 = balance_bst(tree1)
 TreeNode.display_keys(tree2)
 
 
+# BSTNode
 
-###############################
-# the generic class `TreeMap` that has been stated in a python-friendly manner
-class TreeMap:
-    def __init__(self) -> None:
-        # self.root is the BSTNode we are working on
-        self.root = None
-    
-    # with this, we can set by ['']. If it doesn't exist, we insert it;
-    # if it already exists, we update it
-    def __setitem__(self, key, value):
-        node = find(self.root, key)
-        # below is the same as `if node is None`, coz `not None == True`
-        if not node:
-            self.root = insert(self.root, key, value)
-            self.root = balance_bst(self.root)
-        else:
-            update(self.root, key, value)
-    
-    # with this, we can get by ['']
-    def __getitem__(self, key):
-        node = find(self.root, key)
-        return node.value if node else None
-    
-    # with this, we can iterate by `for key, value in treemap:` (in asc order)
-    def __iter__(self):
-        return (x for x in list_all(self.root))
-    
-    # with this, we can get `length` of a BSTNode by len(treemap)
-    def __len__(self):
-        return TreeNode.size(self.root)
-    
-    def display(self):
-        return TreeNode.display_keys(self.root)
-    
-    
+tree = BSTNode(jadhesh.username, jadhesh)
+print(tree.key, tree.value)
+
+
+# TreeMap
+
 treemap = TreeMap()
 treemap.display()
 
