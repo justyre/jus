@@ -1,7 +1,7 @@
 # Licensed under MIT License.
 # See LICENSE in the project root for license information.
 
-"""Tim sort implementation."""
+"""Timsort implementation."""
 
 # This algorithm finds subsequences that are already ordered (called "runs") and uses 
 # them to sort the remainder more efficiently. It is a hybrid of insertion sort and 
@@ -11,7 +11,10 @@
 # The complete C implementation code of this algorithm in Python source can be found:
 # https://hg.python.org/cpython/file/tip/Objects/listobject.c
 
-from typing import Any, List, Optional
+from typing import List, Sequence
+
+import copy
+import random
     
 def find_minrun(n: int) -> int:
     """Compute a good value for the minimum run length.
@@ -42,7 +45,7 @@ def find_minrun(n: int) -> int:
     # If n < 64, just return n, since it is too small to bother with fancy stuff
     return n + r
 
-def insertion_sort(li: List, left: int, right: int) -> List:
+def insertion_sort(li: Sequence, left: int, right: int) -> List:
     """Sort [left, right) of a list in non-decreasing order using insertion sort in-place."""
     # Keep the initial portion sorted, and insert the remaining elems one by one at 
     # the right position.
@@ -58,7 +61,7 @@ def insertion_sort(li: List, left: int, right: int) -> List:
         # Note: list.insert(k) inserts BEFORE the kth elem
         li[j+1] = current
 
-def merge(li: List, left_index: int, mid_index: int, right_index: int) -> None:
+def merge(li: Sequence, left_index: int, mid_index: int, right_index: int) -> None:
     """Merge two sorted sublists into one sorted list in-place.
     
     The two sorted sublists are: `li[l:m]`, `li[m:r]`.
@@ -86,7 +89,7 @@ def merge(li: List, left_index: int, mid_index: int, right_index: int) -> None:
         j += 1
         k += 1
 
-def tim_sort(li: List) -> List:
+def tim_sort(li: Sequence) -> List:
     """Tim sort a list and return a new list, leaving the original one intact."""
     minrun = find_minrun(len(li))
     
@@ -106,7 +109,7 @@ def tim_sort(li: List) -> List:
             merge(li, left, mid, right)
         size *= 2
 
-def _count_run(li: List, lo: int, hi: int) -> int:
+def _count_run(li: Sequence, lo: int, hi: int) -> int:
     """Count the length of the run beginning at lo, in the slice [lo, hi).
     
     lo < hi is required on entry.
@@ -136,9 +139,8 @@ def _count_run(li: List, lo: int, hi: int) -> int:
     return n
 
 
+#########################
 # Driver code
-
-import random
 
 sample_list = random.sample(range(1, 2000), 1000)
 # sample_list = [-1,5,0,-3,11,9,-2,7,0]
@@ -157,10 +159,7 @@ assert sample_list == sorted_by_python
 
 
 # Demonstrate that only copy.deepcopy() is totally reliable.
-# For an unnested list, use li.copy() or list(li). For a nested list (that has lists as
-# its elems), we can only use `import copy; copy.deepcopy(li)` to do the proper copying.
-
-import copy
+# For an non-nested list, use li.copy() or list(li). For a nested list (that has lists as its elems), we can only use `import copy; copy.deepcopy(li)` to do copying properly.
 
 sample_list = [[-1,5,0],-3,11,9,-2,7,0]
 copied = {}
